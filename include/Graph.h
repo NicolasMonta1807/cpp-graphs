@@ -31,6 +31,7 @@ public:
   bool deleteVertex(T v);
   bool deleteEdge(T v1, T v2);
   std::vector<std::vector<int>> Prim(T source);
+  std::vector<std::vector<int>> Dijkstra(T source);
 };
 
 #include "Graph.hxx"

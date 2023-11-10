@@ -163,12 +163,16 @@ bool Graph<T, U>::deleteEdge(T v1, T v2)
 template <class T, class U>
 std::vector<std::vector<int>> Graph<T, U>::Prim(T source)
 {
-  int vertices = this->verticesCount();  // Amount of vertices in the graph
-  std::vector<U> weights(vertices, INF); // Creates a vector of costs with INF to be compared
-  std::vector<int> predecesors(vertices, -1);
+  int vertices = this->verticesCount();       // Amount of vertices in the graph
+  std::vector<U> weights(vertices, INF);      // Creates a vector of costs with INF to be compared
+  std::vector<int> predecesors(vertices, -1); // Source to i vertex
   std::vector<bool> visited(vertices, false); // Vector to keep track of visited vectors, all are false at start
 
-  std::priority_queue<std::pair<int, U>, std::vector<std::pair<int, U>>, std::greater<std::pair<int, U>>> pq;
+  std::priority_queue<
+      std::pair<int, U>,
+      std::vector<std::pair<int, U>>,
+      std::greater<std::pair<int, U>>>
+      pq;
 
   int sourceIndex = this->findVertex(source);
   weights[sourceIndex] = 0; // Setting first cost to 0 - Itself
@@ -190,6 +194,62 @@ std::vector<std::vector<int>> Graph<T, U>::Prim(T source)
         weights[v] = u_v_edge;
         pq.push({v, weights[v]});
         predecesors[v] = u_index;
+      }
+    }
+  }
+
+  std::vector<std::vector<int>> mst(vertices);
+  for (int i = 0; i < vertices; i++)
+  {
+    if (predecesors[i] != -1 || i == sourceIndex)
+    {
+      int vertex = this->vertices[i];
+      while (vertex != -1)
+      {
+        mst[i].push_back(vertex);
+        vertex = predecesors[vertex];
+      }
+    }
+  }
+
+  for (int i = 0; i < vertices; i++)
+  {
+    std::reverse(mst[i].begin(), mst[i].end());
+  }
+
+  return mst;
+}
+
+template <class T, class U>
+std::vector<std::vector<int>> Graph<T, U>::Dijkstra(T source)
+{
+  int vertices = this->verticesCount(); // Amount of vertices in the graph
+  std::vector<U> weights(vertices, INF);
+  std::vector<int> predecesors(vertices, -1);
+
+  std::priority_queue<
+      std::pair<int, U>,
+      std::vector<std::pair<int, U>>,
+      std::greater<std::pair<int, U>>>
+      pq;
+
+  int sourceIndex = this->findVertex(source);
+  weights[sourceIndex] = 0;
+  pq.push({sourceIndex, 0});
+
+  while (!pq.empty())
+  {
+    int u_index = pq.top().first;
+    pq.pop();
+
+    for (int v = 0; v < vertices; v++)
+    {
+      U u_v_edge = this->findEdge(this->vertices[u_index], this->vertices[v]);
+      if (u_v_edge != -1 && weights[u_index] != INF && weights[u_index] + u_v_edge < weights[v])
+      {
+        weights[v] = weights[u_index] + u_v_edge;
+        predecesors[v] = u_index;
+        pq.push({v, weights[v]});
       }
     }
   }
