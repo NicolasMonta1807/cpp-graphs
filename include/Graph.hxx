@@ -34,6 +34,12 @@ int Graph<T, U>::edgesCount()
 }
 
 template <class T, class U>
+T Graph<T, U>::getVertex(long pos)
+{
+  return this->vertices[pos];
+}
+
+template <class T, class U>
 bool Graph<T, U>::addVertex(T v)
 {
   if (this->findVertex(v) != -1)
@@ -161,7 +167,7 @@ bool Graph<T, U>::deleteEdge(T v1, T v2)
 }
 
 template <class T, class U>
-std::vector<std::vector<int>> Graph<T, U>::Prim(T source)
+std::vector<std::vector<T>> Graph<T, U>::Prim(T source)
 {
   int vertices = this->verticesCount();       // Amount of vertices in the graph
   std::vector<U> weights(vertices, INF);      // Creates a vector of costs with INF to be compared
@@ -171,7 +177,7 @@ std::vector<std::vector<int>> Graph<T, U>::Prim(T source)
   std::priority_queue<
       std::pair<int, U>,
       std::vector<std::pair<int, U>>,
-      std::greater<std::pair<int, U>>>
+      CompareSecond<int, U>>
       pq;
 
   int sourceIndex = this->findVertex(source);
@@ -198,30 +204,30 @@ std::vector<std::vector<int>> Graph<T, U>::Prim(T source)
     }
   }
 
-  std::vector<std::vector<int>> mst(vertices);
+  std::vector<std::vector<T>> mst(vertices);
   for (int i = 0; i < vertices; i++)
   {
     if (predecesors[i] != -1 || i == sourceIndex)
     {
-      int vertex = this->vertices[i];
-      while (vertex != -1)
+      T vertex = this->vertices[i];
+      int vertexIndex = this->findVertex(vertex);
+      while (vertexIndex != -1)
       {
         mst[i].push_back(vertex);
-        vertex = predecesors[vertex];
+        vertex = this->getVertex(predecesors[vertexIndex]);
+        vertexIndex = this->findVertex(vertex);
       }
     }
   }
 
   for (int i = 0; i < vertices; i++)
-  {
     std::reverse(mst[i].begin(), mst[i].end());
-  }
 
   return mst;
 }
 
 template <class T, class U>
-std::vector<std::vector<int>> Graph<T, U>::Dijkstra(T source)
+std::vector<std::vector<T>> Graph<T, U>::Dijkstra(T source)
 {
   int vertices = this->verticesCount(); // Amount of vertices in the graph
   std::vector<U> weights(vertices, INF);
@@ -230,7 +236,7 @@ std::vector<std::vector<int>> Graph<T, U>::Dijkstra(T source)
   std::priority_queue<
       std::pair<int, U>,
       std::vector<std::pair<int, U>>,
-      std::greater<std::pair<int, U>>>
+      CompareSecond<int, U>>
       pq;
 
   int sourceIndex = this->findVertex(source);
@@ -254,16 +260,18 @@ std::vector<std::vector<int>> Graph<T, U>::Dijkstra(T source)
     }
   }
 
-  std::vector<std::vector<int>> mst(vertices);
+  std::vector<std::vector<T>> mst(vertices);
   for (int i = 0; i < vertices; i++)
   {
     if (predecesors[i] != -1 || i == sourceIndex)
     {
-      int vertex = this->vertices[i];
-      while (vertex != -1)
+      T vertex = this->vertices[i];
+      int vertexIndex = this->findVertex(vertex);
+      while (vertexIndex != -1)
       {
         mst[i].push_back(vertex);
-        vertex = predecesors[vertex];
+        vertex = this->getVertex(predecesors[vertexIndex]);
+        vertexIndex = this->findVertex(vertex);
       }
     }
   }

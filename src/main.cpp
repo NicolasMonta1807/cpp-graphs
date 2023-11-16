@@ -3,8 +3,7 @@
 
 int main()
 {
-
-  Graph<int, int> g(false);
+  Graph<int, float> g(false);
 
   g.addVertex(0);
   g.addVertex(1);
@@ -13,18 +12,33 @@ int main()
   g.addVertex(4);
   g.addVertex(5);
   g.addVertex(6);
+  g.addVertex(7);
 
-  g.addEdge(0, 1, 3);
-  g.addEdge(0, 3, 2);
-  g.addEdge(0, 2, 7);
-  g.addEdge(2, 5, 3);
-  g.addEdge(2, 6, 9);
-  g.addEdge(2, 4, 6);
-  g.addEdge(4, 6, 9);
+  g.addEdge(0, 1, 45);
+  g.addEdge(0, 2, 32.01);
+  g.addEdge(0, 3, 35.355);
 
-  std::vector<std::vector<int>> prim = g.Prim(5);
+  g.addEdge(1, 3, 32.015);
+  g.addEdge(1, 4, 25);
+  g.addEdge(1, 5, 32.015);
 
-  std::cout << "Prim MST from 5:" << std::endl;
+  g.addEdge(2, 6, 32.015);
+  g.addEdge(2, 3, 45);
+
+  g.addEdge(3, 6, 35.355);
+  g.addEdge(3, 4, 20);
+  g.addEdge(3, 7, 32.015);
+
+  g.addEdge(4, 7, 25);
+  g.addEdge(4, 5, 20);
+
+  g.addEdge(5, 7, 32.015);
+
+  g.addEdge(6, 7, 45);
+
+  std::vector<std::vector<int>> prim = g.Prim(0);
+
+  std::cout << "Prim MST from 0:" << std::endl;
   for (int i = 0; i < prim.size(); i++)
   {
     std::cout << i << ": ";
@@ -38,28 +52,7 @@ int main()
     std::cout << std::endl;
   }
 
-  Graph<int, int> h(false);
-
-  h.addVertex(0);
-  h.addVertex(1);
-  h.addVertex(2);
-  h.addVertex(3);
-  h.addVertex(4);
-  h.addVertex(5);
-  h.addVertex(6);
-  h.addVertex(7);
-
-  h.addEdge(5, 3, 4);
-  h.addEdge(3, 1, 2);
-  h.addEdge(3, 0, 3);
-  h.addEdge(1, 0, 5);
-  h.addEdge(0, 2, 6);
-  h.addEdge(2, 4, 6);
-  h.addEdge(4, 6, 7);
-  h.addEdge(6, 7, 3);
-  h.addEdge(4, 7, 3);
-
-  std::vector<std::vector<int>> paths = h.Dijkstra(5);
+  std::vector<std::vector<int>> paths = g.Dijkstra(0);
   std::cout << "Dijkstra from 5:" << std::endl;
   for (int i = 0; i < paths.size(); i++)
   {
